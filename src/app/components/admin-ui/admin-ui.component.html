@@ -1,0 +1,108 @@
+
+
+<h1>Admin UI</h1>
+
+
+<div class="container">
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control search"
+      placeholder="Search by name,email or role"
+      aria-label="Username"
+      aria-describedby="basic-addon1"
+      [(ngModel)]="searchText"
+    />
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">
+          <input
+            type="checkbox"
+            [(ngModel)]="selectAll"
+            (change)="selectAllItem()"
+          />
+        </th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let item of data | searchPipe:searchText
+            | paginate : { itemsPerPage: 10, currentPage: currentPage };
+          index as i
+        "
+        [ngClass]="{ selected: checkbox.checked }"
+        #selectedRow
+      >
+        <th scope="row">
+          <input type="checkbox" [(ngModel)]="item.selected" #checkbox />
+        </th>
+
+        <td>
+          <p *ngIf="!item.editing">{{ item.name }}</p>
+          <input
+            type="text"
+            value="{{ item.name }}"
+            *ngIf="item.editing"
+            #name
+          />
+        </td>
+
+        <td>
+          <p *ngIf="!item.editing">{{ item.email }}</p>
+          <input
+            type="text"
+            value="{{ item.email }}"
+            *ngIf="item.editing"
+            #email
+          />
+        </td>
+        <td>
+          <p *ngIf="!item.editing">{{ item.role }}</p>
+          <select
+            class="form-select form-select-sm"
+            aria-label=".form-select-sm example"
+            *ngIf="item.editing"
+            #role
+          >
+            <option value="member">member</option>
+            <option selected value="admin">admin</option>
+          </select>
+        </td>
+
+        <td>
+          <div *ngIf="!item.editing">
+            <i class="bi bi-pencil-square" (click)="edit(item)"></i>
+            <i class="bi bi-trash-fill" (click)="deleteOne(i)"></i>
+          </div>
+
+          <div *ngIf="item.editing">
+            <button (click)="saveEdit(item)">Save</button>
+            <button (click)="cancel(item)">Cancel</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-container">
+    <button (click)="deleteSelected()" class="deleteSelected">Delete Selected</button>
+
+    <button (click)="goToFirstPage()" class="jump-btn">Go To First</button>
+    <pagination-controls
+      (pageChange)="currentPage = $event"
+      (click)="resetSelectAll()"
+      class="pagination"
+      previousLabel=""
+      nextLabel=""
+    ></pagination-controls>
+    <button (click)="goToLastPage()" class="jump-btn">Go To Last</button>
+  </div>
+</div>
