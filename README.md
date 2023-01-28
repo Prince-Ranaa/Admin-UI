@@ -1,3 +1,5 @@
+Live Preview :- https://new-admin-ui.netlify.app/
+
 # AdminUI
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.0.
